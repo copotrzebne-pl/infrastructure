@@ -3,16 +3,12 @@
 Repository to gather terraform scripts for setting up identity base infrastructure and infrastructure for apps running
 in the identity aws accounts.
 
-### AWS
-
-aws_profile    = "copotrzebne-prod"
 
 ## Installation
 
 ```bash
 brew bundle
 tfenv install
-tgenv install
 pre-commit install
 ```
 
@@ -21,10 +17,10 @@ pre-commit install
 Go to stack which you want to deploy in directory `environemts` i.e.
 
 ```bash
-terragrunt plan
-terragrunt apply
-terragrunt destroy
-terragrunt run-all plan | apply | destroy
+AWS_PROFILE=xxx terraform init
+AWS_PROFILE=xxx terraform plan
+AWS_PROFILE=xxx terraform apply
+AWS_PROFILE=xxx terraform destroy
 pre-commit run --all-files
 pre-commit autoupdate
 ```

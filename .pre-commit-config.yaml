@@ -1,12 +1,16 @@
 repos:
-  - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.17
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.64.0
     hooks:
-      - id: terraform-fmt
-      - id: terraform-validate
-      - id: terragrunt-hclfmt
-      - id: tflint
-      - id: shellcheck
+      - id: terraform_fmt
+      - id: terraform_validate
+      - id: terrascan
+      - id: terraform_tflint
+      - id: checkov
+      - id: infracost_breakdown
+        args:
+          - --args=--path=./environments/prod
+        verbose: true
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0  # Use the ref you want to point at

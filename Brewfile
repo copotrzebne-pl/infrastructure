@@ -1,5 +1,4 @@
 brew "tfenv"
-brew "tgenv"
 brew "tfsec"
 brew "tflint"
 brew "terrascan"
