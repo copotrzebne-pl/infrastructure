@@ -4,20 +4,14 @@ module "hosting_zone" {
   name = var.base_domain
 }
 
-module "certificate" {
+module "cdn_certificate" {
   source = "../../modules/certificate"
 
   domain_name = var.base_domain
-}
-
-module "cdn" {
-  source = "../../modules/cdn"
-
-  name                = "www.${var.base_domain}"
-  aliases             = ["www.${var.base_domain}"]
-  parent_zone_id      = module.hosting_zone.zone_id
-  acm_certificate_arn = module.certificate.arn
-  deployer_user_name  = "ci-website-deployer"
+  zone_id     = module.hosting_zone.zone_id
+  providers = { # CF Certificate need to be created in US-EAST-1
+    aws = aws.us-east-1
+  }
 }
 
 module "remote-state-s3-backend" {

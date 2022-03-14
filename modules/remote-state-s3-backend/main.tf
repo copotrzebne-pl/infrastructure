@@ -8,7 +8,8 @@ provider "aws" {
 }
 
 module "remote_state" {
-  source = "nozaq/remote-state-s3-backend/aws"
+  source  = "nozaq/remote-state-s3-backend/aws"
+  version = "1.1.0"
 
   override_s3_bucket_name = true
   s3_bucket_name          = var.s3_bucket_name
