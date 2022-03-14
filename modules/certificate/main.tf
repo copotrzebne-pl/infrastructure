@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.aws_region
+
+}
 resource "aws_acm_certificate" "default" {
   domain_name               = var.domain_name
   validation_method         = "DNS"
@@ -6,6 +10,8 @@ resource "aws_acm_certificate" "default" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws
 }
 
 resource "aws_route53_record" "default" {

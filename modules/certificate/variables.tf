@@ -23,3 +23,8 @@ variable "subject_alternative_names" {
     error_message = "All SANs must be lower-case."
   }
 }
+
+variable "aws_region" {
+  type        = string
+  description = "AWS region"
+}
