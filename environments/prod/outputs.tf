@@ -21,7 +21,7 @@ output "s3_deployer_access_key_id" {
 output "s3_deployer_access_key_secret" {
   value       = module.cdn_with_s3_bucket.deployer_access_key_secret
   description = "Secret access key"
-  sensitive = true
+  sensitive   = true
 }
 
 output "zone_id" {
