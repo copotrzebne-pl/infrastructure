@@ -27,6 +27,46 @@ module "cdn_with_s3_bucket" {
   comment        = local.cdn_domain_name
   domain_name    = local.cdn_domain_name
   s3_bucket_name = local.cdn_domain_name
+
+  custom_origins = [
+    {
+      domain_name    = "api-copotrzebne-pl.herokuapp.com"
+      origin_id      = "api-copotrzebne-heroku"
+      origin_path    = null
+      custom_headers = null
+      custom_origin_config = {
+        http_port                = 80
+        https_port               = 443
+        origin_protocol_policy   = "https-only"
+        origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+        origin_keepalive_timeout = 60
+        origin_read_timeout      = 60
+      }
+      s3_origin_config = null
+    }
+  ]
+
+  ordered_cache = [
+    {
+      target_origin_id = "api-copotrzebne-heroku"
+      path_pattern     = "/api"
+
+      allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+      cached_methods           = ["GET", "HEAD"]
+      cache_policy_id          = null
+      origin_request_policy_id = null
+      compress                 = true
+
+      viewer_protocol_policy = "redirect-to-https"
+      min_ttl                = 0
+      default_ttl            = 60
+      max_ttl                = 3600
+
+      forward_query_string  = true
+      forward_header_values = null
+      forward_cookies       = "none"
+    }
+  ]
 }
 
 module "remote-state-s3-backend" {
