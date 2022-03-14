@@ -1,5 +1,5 @@
 variable "s3_bucket_name" {
-  description = "If override_s3_bucket_name is true, use this bucket name for replica instead of dynamic name with bucket_prefix"
+  description = "Name of the bucket. Replica bucket name will be suffixed with `-replica`."
   type        = string
   default     = ""
 }

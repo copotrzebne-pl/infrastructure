@@ -1,11 +1,10 @@
-variable "allowed_account_ids" {
-  description = "List of allowed AWS account ids where resources can be created"
-  type        = list(string)
-  default     = []
+variable "allowed_account_id" {
+  description = "Allowed AWS account id where resources can be created"
+  type        = string
 }
 
 variable "base_domain" {
-  description = "Based domain name for the project"
+  description = "Base domain name for the project"
   type        = string
 }
 
