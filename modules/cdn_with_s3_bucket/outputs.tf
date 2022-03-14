@@ -56,7 +56,7 @@ output "deployer_user_unique_id" {
 output "deployer_access_key_secret" {
   value       = aws_iam_access_key.deployer_access_key.secret
   description = "Secret access key"
-  sensitive = true
+  sensitive   = true
 }
 
 output "deployer_access_key_id" {
