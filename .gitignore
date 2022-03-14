@@ -1,6 +1,6 @@
 ### Terraform ###
 # Local .terraform directories
-**/.terraform/*
+.terraform/
 
 # .tfstate files
 *.tfstate
@@ -27,4 +27,8 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# infracost
+.infracost/
+
+### IntelliJ ###
 .idea/
