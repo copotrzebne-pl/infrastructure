@@ -44,24 +44,12 @@ variable "ordered_cache" {
     forward_query_string  = bool
     forward_header_values = list(string)
     forward_cookies       = string
-
-    lambda_function_association = list(object({
-      event_type   = string
-      include_body = bool
-      lambda_arn   = string
-    }))
-
-    function_association = list(object({
-      event_type   = string
-      function_arn = string
-    }))
   }))
   default     = []
   description = <<DESCRIPTION
-An ordered list of cache behaviors resource for this distribution. List from top to bottom in order of precedence. The topmost cache behavior will have precedence 0.
-The fields can be described by the other variables in this file. For example, the field 'lambda_function_association' in this object has
-a description in var.lambda_function_association variable earlier in this file. The only difference is that fields on this object are in ordered caches, whereas the rest
-of the vars in this file apply only to the default cache. Put value `""` on field `target_origin_id` to specify default s3 bucket origin.
+An ordered list of cache behaviors resource for this distribution. List from top to bottom in order of precedence.
+The topmost cache behavior will have precedence 0.
+The fields can be described by the other variables in this file.
 DESCRIPTION
 }
 
@@ -87,7 +75,10 @@ variable "custom_origins" {
     })
   }))
   default     = []
-  description = "One or more custom origins for this distribution (multiples allowed). See documentation for configuration options description https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#origin-arguments"
+  description = <<DESCRIPTION
+One or more custom origins for this distribution (multiples allowed). See documentation for configuration options
+description https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#origin-arguments
+DESCRIPTION
 }
 
 variable "acm_certificate_arn" {
