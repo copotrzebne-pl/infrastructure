@@ -32,5 +32,7 @@ module "cdn_with_s3_bucket" {
 module "remote-state-s3-backend" {
   source = "../../modules/remote-state-s3-backend"
 
-  s3_bucket_name = "terraform-remote-state-773224345969-eu-central-1"
+  account_id     = var.aws_account_id
+  region         = "eu-central-1"
+  replica_region = "us-west-1"
 }

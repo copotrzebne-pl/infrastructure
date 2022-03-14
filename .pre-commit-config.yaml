@@ -5,13 +5,8 @@ repos:
       - id: terraform_fmt
       - id: terraform_validate
         exclude: modules/
-#      - id: terrascan
       - id: terraform_tflint
       - id: checkov
-#      - id: infracost_breakdown
-#        args:
-#          - --args=--path=./environments/prod
-#        verbose: true
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0  # Use the ref you want to point at

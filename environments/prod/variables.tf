@@ -1,6 +1,6 @@
-variable "allowed_account_id" {
-  description = "Allowed AWS account id where resources can be created"
-  type        = string
+variable "aws_account_id" {
+  description = "AWS account id where resources will be created"
+  type        = number
 }
 
 variable "base_domain" {

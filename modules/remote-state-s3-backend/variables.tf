@@ -15,3 +15,8 @@ variable "replica_region" {
   type        = string
   default     = "us-west-1"
 }
+
+variable "account_id" {
+  description = "AWS account id where S3 bucket and DynamoDB Table will be created"
+  type        = number
+}
