@@ -49,6 +49,7 @@ Instructions of setting up your project locally. Follow these simple steps.
   ```bash
   brew bundle
   tfenv install
+  tflint --init
   pre-commit install
   ```
 
