@@ -1,6 +1,7 @@
 locals {
   cdn_domain_name = "www.${var.base_domain}"
 }
+
 module "hosting_zone" {
   source = "../../modules/hosting_zone"
 
@@ -34,4 +35,8 @@ module "remote-state-s3-backend" {
   account_id     = var.aws_account_id
   region         = "eu-central-1"
   replica_region = "us-west-1"
+}
+
+module "network" {
+  source = "../../modules/network"
 }
