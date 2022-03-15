@@ -28,6 +28,14 @@ module "cdn_with_s3_bucket" {
   domain_name    = local.cdn_domain_name
   s3_bucket_name = local.cdn_domain_name
 
+  # redirect 404s to index.html to make SPA work
+  custom_error_response = [{
+    error_caching_min_ttl = 60
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "index.html"
+  }]
+
   custom_origins = [
     {
       domain_name    = "api-copotrzebne-pl.herokuapp.com"
