@@ -4,7 +4,7 @@ resource "aws_iam_user" "deployer" {
 
 data "aws_iam_policy_document" "deployer_policy" {
   statement {
-    sid = "s3-read-deployer"
+    sid = "s3ReadDeployer"
     actions = [
       "s3:GetObject",
       "s3:DeleteObject",
@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "deployer_policy" {
   }
 
   statement {
-    sid = "s3-read-deployer-bucket"
+    sid = "s3ReadDeployerBucket"
     actions = [
       "s3:ListBucket",
       "s3:GetBucketLocation"
@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "deployer_policy" {
   }
 
   statement {
-    sid = "s3-read-cf-invatigation"
+    sid = "s3ReadCfInvatigation"
     actions = [
       "cloudfront:CreateInvalidation"
     ]
@@ -38,7 +38,6 @@ data "aws_iam_policy_document" "deployer_policy" {
 
   depends_on = [aws_s3_bucket.default, aws_cloudfront_distribution.default]
 }
-
 
 resource "aws_iam_user_policy" "deployer_policy" {
   #checkov:skip=CKV_AWS_40:TODO: We should skip to assume role

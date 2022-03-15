@@ -8,6 +8,11 @@ variable "base_domain" {
   type        = string
 }
 
+variable "api_domain_name" {
+  type        = string
+  description = "A domain name for API"
+}
+
 variable "aws_region" {
   description = "AWS Region"
   type        = string

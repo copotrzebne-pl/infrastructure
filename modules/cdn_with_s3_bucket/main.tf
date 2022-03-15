@@ -3,15 +3,15 @@ locals {
 
   custom_origins = [
     {
-      domain_name    = "api-copotrzebne-pl.herokuapp.com"
-      origin_id      = "api-copotrzebne-heroku"
+      domain_name    = var.api_domain_name
+      origin_id      = "api-copotrzebne"
       origin_path    = null
       custom_headers = null
       custom_origin_config = {
         http_port                = 80
         https_port               = 443
         origin_protocol_policy   = "https-only"
-        origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+        origin_ssl_protocols     = ["TLSv1.2"]
         origin_keepalive_timeout = 60
         origin_read_timeout      = 60
       }
@@ -21,7 +21,7 @@ locals {
 
   ordered_cache = [
     {
-      target_origin_id = "api-origin"
+      target_origin_id = "api-copotrzebne"
       path_pattern     = "/api/*"
 
       allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -45,7 +45,7 @@ locals {
     error_caching_min_ttl = 60
     error_code            = 404
     response_code         = 200
-    response_page_path    = "index.html"
+    response_page_path    = "/index.html"
   }]
 }
 

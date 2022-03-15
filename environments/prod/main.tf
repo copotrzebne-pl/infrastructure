@@ -24,9 +24,10 @@ module "cdn_with_s3_bucket" {
   zone_id             = module.hosting_zone.zone_id
   s3_user_name        = "ci-s3-website-deployer"
 
-  comment        = local.cdn_domain_name
-  domain_name    = local.cdn_domain_name
-  s3_bucket_name = local.cdn_domain_name
+  comment         = local.cdn_domain_name
+  domain_name     = local.cdn_domain_name
+  s3_bucket_name  = local.cdn_domain_name
+  api_domain_name = var.api_domain_name
 }
 
 module "remote-state-s3-backend" {

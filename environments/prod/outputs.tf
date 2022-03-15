@@ -38,3 +38,23 @@ output "zone_name_servers" {
   value       = module.hosting_zone.name_servers
   description = "A list of name servers in associated (or default) delegation set"
 }
+
+output "network_azs" {
+  description = "A list of used avalibility zones."
+  value       = module.network.azs
+}
+
+output "network_vpc_id" {
+  description = "Id of the VPC associated to the network."
+  value       = module.network.vpc_id
+}
+
+output "network_public_subnets" {
+  description = "List of IDs of public subnets."
+  value       = module.network.public_subnets
+}
+
+output "network_private_subnets" {
+  description = "List of IDs of private subnets."
+  value       = module.network.private_subnets
+}

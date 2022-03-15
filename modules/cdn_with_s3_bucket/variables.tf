@@ -1,9 +1,19 @@
 variable "domain_name" {
   type        = string
-  description = "A domain name for which the certificate should be issued"
+  description = "A domain name for CDN"
 
   validation {
     condition     = !can(regex("[A-Z]", var.domain_name))
+    error_message = "Domain name must be lower-case."
+  }
+}
+
+variable "api_domain_name" {
+  type        = string
+  description = "A domain name for API"
+
+  validation {
+    condition     = !can(regex("[A-Z]", var.api_domain_name))
     error_message = "Domain name must be lower-case."
   }
 }
