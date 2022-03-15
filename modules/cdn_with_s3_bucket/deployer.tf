@@ -4,6 +4,7 @@ resource "aws_iam_user" "deployer" {
 
 data "aws_iam_policy_document" "deployer_policy" {
   statement {
+    sid = "s3-read-deployer"
     actions = [
       "s3:GetObject",
       "s3:DeleteObject",
@@ -17,6 +18,7 @@ data "aws_iam_policy_document" "deployer_policy" {
   }
 
   statement {
+    sid = "s3-read-deployer-bucket"
     actions = [
       "s3:ListBucket",
       "s3:GetBucketLocation"
@@ -26,6 +28,7 @@ data "aws_iam_policy_document" "deployer_policy" {
   }
 
   statement {
+    sid = "s3-read-cf-invatigation"
     actions = [
       "cloudfront:CreateInvalidation"
     ]

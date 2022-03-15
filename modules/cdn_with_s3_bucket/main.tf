@@ -1,3 +1,54 @@
+locals {
+  origin_id = "s3-bucket-${var.domain_name}"
+
+  custom_origins = [
+    {
+      domain_name    = "api-copotrzebne-pl.herokuapp.com"
+      origin_id      = "api-copotrzebne-heroku"
+      origin_path    = null
+      custom_headers = null
+      custom_origin_config = {
+        http_port                = 80
+        https_port               = 443
+        origin_protocol_policy   = "https-only"
+        origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+        origin_keepalive_timeout = 60
+        origin_read_timeout      = 60
+      }
+      s3_origin_config = null
+    }
+  ]
+
+  ordered_cache = [
+    {
+      target_origin_id = "api-origin"
+      path_pattern     = "/api/*"
+
+      allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+      cached_methods           = ["GET", "HEAD"]
+      cache_policy_id          = null
+      origin_request_policy_id = null
+      compress                 = true
+
+      viewer_protocol_policy = "redirect-to-https"
+      min_ttl                = var.api_min_ttl
+      default_ttl            = var.api_default_ttl
+      max_ttl                = var.api_max_ttl
+
+      forward_query_string  = true
+      forward_header_values = null
+      forward_cookies       = "none"
+    }
+  ]
+
+  custom_error_response = [{
+    error_caching_min_ttl = 60
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "index.html"
+  }]
+}
+
 resource "aws_cloudfront_origin_access_identity" "default" {
   comment = var.comment
 }
@@ -16,7 +67,7 @@ resource "aws_cloudfront_distribution" "default" {
   aliases = [var.domain_name]
 
   dynamic "custom_error_response" {
-    for_each = var.custom_error_response
+    for_each = local.custom_error_response
     content {
       error_caching_min_ttl = lookup(custom_error_response.value, "error_caching_min_ttl", null)
       error_code            = custom_error_response.value.error_code
@@ -27,7 +78,7 @@ resource "aws_cloudfront_distribution" "default" {
 
   origin {
     domain_name = aws_s3_bucket.default.bucket_regional_domain_name
-    origin_id   = var.origin_id
+    origin_id   = local.origin_id
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
@@ -35,7 +86,7 @@ resource "aws_cloudfront_distribution" "default" {
   }
 
   dynamic "origin" {
-    for_each = var.custom_origins
+    for_each = local.custom_origins
     content {
       domain_name = origin.value.domain_name
       origin_id   = origin.value.origin_id
@@ -71,7 +122,7 @@ resource "aws_cloudfront_distribution" "default" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = var.origin_id
+    target_origin_id = local.origin_id
     compress         = true
 
     forwarded_values {
@@ -86,13 +137,13 @@ resource "aws_cloudfront_distribution" "default" {
     }
 
     viewer_protocol_policy = "redirect-to-https"
-    default_ttl            = var.default_ttl
-    min_ttl                = var.min_ttl
-    max_ttl                = var.max_ttl
+    default_ttl            = var.static_default_ttl
+    min_ttl                = var.static_min_ttl
+    max_ttl                = var.static_max_ttl
   }
 
   dynamic "ordered_cache_behavior" {
-    for_each = var.ordered_cache
+    for_each = local.ordered_cache
 
     content {
       path_pattern = ordered_cache_behavior.value.path_pattern
@@ -101,7 +152,7 @@ resource "aws_cloudfront_distribution" "default" {
       cached_methods           = ordered_cache_behavior.value.cached_methods
       cache_policy_id          = ordered_cache_behavior.value.cache_policy_id
       origin_request_policy_id = ordered_cache_behavior.value.origin_request_policy_id
-      target_origin_id         = ordered_cache_behavior.value.target_origin_id == "" ? var.origin_id : ordered_cache_behavior.value.target_origin_id
+      target_origin_id         = ordered_cache_behavior.value.target_origin_id == "" ? local.origin_id : ordered_cache_behavior.value.target_origin_id
       compress                 = ordered_cache_behavior.value.compress
 
       dynamic "forwarded_values" {
