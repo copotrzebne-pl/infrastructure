@@ -15,4 +15,7 @@ module "vpc" {
   azs             = data.aws_availability_zones.available.names
   private_subnets = [for i in range(local.availability_zones_count) : "10.0.${i}.0/24"]
   public_subnets  = [for i in range(local.availability_zones_count) : "10.0.10${i}.0/24"]
+  #  database_subnets = [for i in range(local.availability_zones_count) : "10.0.20${i}.0/24"]
+
+  #  create_database_subnet_group = true
 }

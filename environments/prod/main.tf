@@ -1,5 +1,10 @@
+data "aws_ssm_parameter" "db_credentials" {
+  name = "/prod/database/credentials"
+}
+
 locals {
   cdn_domain_name = "www.${var.base_domain}"
+  db_credentials  = jsondecode(data.aws_ssm_parameter.db_credentials.value)
 }
 
 module "hosting_zone" {
@@ -49,4 +54,12 @@ module "redirect" {
   zone_id             = module.hosting_zone.zone_id
   domain_name         = var.base_domain
   target_url          = local.cdn_domain_name
+}
+
+module "rds" {
+  source = "../../modules/rds"
+
+  subnet_group_name = module.network.db_subnet_group_name
+  database_name     = "copotrzebne"
+  db_credentials    = local.db_credentials
 }
