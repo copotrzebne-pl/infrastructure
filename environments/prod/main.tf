@@ -41,3 +41,12 @@ module "remote-state-s3-backend" {
 module "network" {
   source = "../../modules/network"
 }
+
+module "redirect" {
+  source = "../../modules/redirect"
+
+  acm_certificate_arn = module.cdn_certificate.arn
+  zone_id             = module.hosting_zone.zone_id
+  domain_name         = var.base_domain
+  target_url          = local.cdn_domain_name
+}
