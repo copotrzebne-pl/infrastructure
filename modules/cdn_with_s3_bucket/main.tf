@@ -1,52 +1,5 @@
 locals {
   origin_id = "s3-bucket-${var.domain_name}"
-
-  custom_origins = [
-    {
-      domain_name    = var.api_domain_name
-      origin_id      = "api-copotrzebne"
-      origin_path    = null
-      custom_headers = null
-      custom_origin_config = {
-        http_port                = 80
-        https_port               = 443
-        origin_protocol_policy   = "https-only"
-        origin_ssl_protocols     = ["TLSv1.2"]
-        origin_keepalive_timeout = 60
-        origin_read_timeout      = 60
-      }
-      s3_origin_config = null
-    }
-  ]
-
-  ordered_cache = [
-    {
-      target_origin_id = "api-copotrzebne"
-      path_pattern     = "/api/*"
-
-      allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-      cached_methods           = ["GET", "HEAD"]
-      cache_policy_id          = null
-      origin_request_policy_id = null
-      compress                 = true
-
-      viewer_protocol_policy = "redirect-to-https"
-      min_ttl                = var.api_min_ttl
-      default_ttl            = var.api_default_ttl
-      max_ttl                = var.api_max_ttl
-
-      forward_query_string  = true
-      forward_header_values = null
-      forward_cookies       = "none"
-    }
-  ]
-
-  custom_error_response = [{
-    error_caching_min_ttl = 60
-    error_code            = 404
-    response_code         = 200
-    response_page_path    = "/index.html"
-  }]
 }
 
 resource "aws_cloudfront_origin_access_identity" "default" {
@@ -66,14 +19,11 @@ resource "aws_cloudfront_distribution" "default" {
 
   aliases = [var.domain_name]
 
-  dynamic "custom_error_response" {
-    for_each = local.custom_error_response
-    content {
-      error_caching_min_ttl = lookup(custom_error_response.value, "error_caching_min_ttl", null)
-      error_code            = custom_error_response.value.error_code
-      response_code         = lookup(custom_error_response.value, "response_code", null)
-      response_page_path    = lookup(custom_error_response.value, "response_page_path", null)
-    }
+  custom_error_response {
+    error_caching_min_ttl = 60
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
   }
 
   origin {
@@ -85,30 +35,16 @@ resource "aws_cloudfront_distribution" "default" {
     }
   }
 
-  dynamic "origin" {
-    for_each = local.custom_origins
-    content {
-      domain_name = origin.value.domain_name
-      origin_id   = origin.value.origin_id
-      origin_path = lookup(origin.value, "origin_path", "")
-
-      dynamic "custom_origin_config" {
-        for_each = lookup(origin.value, "custom_origin_config", null) == null ? [] : [true]
-        content {
-          http_port                = lookup(origin.value.custom_origin_config, "http_port", null)
-          https_port               = lookup(origin.value.custom_origin_config, "https_port", null)
-          origin_protocol_policy   = lookup(origin.value.custom_origin_config, "origin_protocol_policy", "https-only")
-          origin_ssl_protocols     = lookup(origin.value.custom_origin_config, "origin_ssl_protocols", ["TLSv1.2"])
-          origin_keepalive_timeout = lookup(origin.value.custom_origin_config, "origin_keepalive_timeout", 60)
-          origin_read_timeout      = lookup(origin.value.custom_origin_config, "origin_read_timeout", 60)
-        }
-      }
-      dynamic "s3_origin_config" {
-        for_each = lookup(origin.value, "s3_origin_config", null) == null ? [] : [true]
-        content {
-          origin_access_identity = lookup(origin.value.s3_origin_config, "origin_access_identity", null)
-        }
-      }
+  origin {
+    domain_name = var.api_domain_name
+    origin_id   = "api-copotrzebne"
+    custom_origin_config {
+      http_port                = 80
+      https_port               = 443
+      origin_protocol_policy   = "https-only"
+      origin_ssl_protocols     = ["TLSv1.2"]
+      origin_keepalive_timeout = 60
+      origin_read_timeout      = 60
     }
   }
 
@@ -142,38 +78,30 @@ resource "aws_cloudfront_distribution" "default" {
     max_ttl                = var.static_max_ttl
   }
 
-  dynamic "ordered_cache_behavior" {
-    for_each = local.ordered_cache
+  ordered_cache_behavior {
+    target_origin_id = "api-copotrzebne"
+    path_pattern     = "/api/*"
 
-    content {
-      path_pattern = ordered_cache_behavior.value.path_pattern
+    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods           = ["GET", "HEAD"]
+    cache_policy_id          = null
+    origin_request_policy_id = null
+    compress                 = true
 
-      allowed_methods          = ordered_cache_behavior.value.allowed_methods
-      cached_methods           = ordered_cache_behavior.value.cached_methods
-      cache_policy_id          = ordered_cache_behavior.value.cache_policy_id
-      origin_request_policy_id = ordered_cache_behavior.value.origin_request_policy_id
-      target_origin_id         = ordered_cache_behavior.value.target_origin_id == "" ? local.origin_id : ordered_cache_behavior.value.target_origin_id
-      compress                 = ordered_cache_behavior.value.compress
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = var.api_min_ttl
+    default_ttl            = var.api_default_ttl
+    max_ttl                = var.api_max_ttl
 
-      dynamic "forwarded_values" {
-        # If a cache policy or origin request policy is specified, we cannot include a `forwarded_values` block at all in the API request
-        for_each = try(coalesce(ordered_cache_behavior.value.cache_policy_id), null) == null && try(coalesce(ordered_cache_behavior.value.origin_request_policy_id), null) == null ? [
-          true
-        ] : []
-        content {
-          query_string = ordered_cache_behavior.value.forward_query_string
-          headers      = ordered_cache_behavior.value.forward_header_values
+    forwarded_values {
+      headers = ['Authorization']
 
-          cookies {
-            forward = ordered_cache_behavior.value.forward_cookies
-          }
-        }
+      query_string = true
+
+      cookies {
+        forward           = "none"
+        whitelisted_names = []
       }
-
-      viewer_protocol_policy = ordered_cache_behavior.value.viewer_protocol_policy
-      default_ttl            = ordered_cache_behavior.value.default_ttl
-      min_ttl                = ordered_cache_behavior.value.min_ttl
-      max_ttl                = ordered_cache_behavior.value.max_ttl
     }
   }
 
@@ -182,28 +110,5 @@ resource "aws_cloudfront_distribution" "default" {
       restriction_type = "none"
       locations        = []
     }
-  }
-}
-
-resource "aws_cloudfront_response_headers_policy" "default" {
-  name    = "example-policy"
-  comment = "test comment"
-
-  cors_config {
-    access_control_allow_credentials = true
-
-    access_control_allow_headers {
-      items = ["test"]
-    }
-
-    access_control_allow_methods {
-      items = ["GET"]
-    }
-
-    access_control_allow_origins {
-      items = ["test.example.comtest"]
-    }
-
-    origin_override = true
   }
 }
