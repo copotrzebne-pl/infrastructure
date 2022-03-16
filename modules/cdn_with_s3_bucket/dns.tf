@@ -5,7 +5,7 @@ resource "aws_route53_record" "default" {
 
   alias {
     name                   = aws_cloudfront_distribution.default.domain_name
-    zone_id                = "Z2FDTNDATAQYW2"
+    zone_id                = aws_cloudfront_distribution.default.hosted_zone_id
     evaluate_target_health = true
   }
 }
