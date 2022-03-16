@@ -5,6 +5,7 @@ resource "aws_s3_bucket" "default" {
   #checkov:skip=CKV_AWS_19:Data are encrypted - outdated rule
   #checkov:skip=CKV_AWS_145:Data are encrypted - outdated rule
   #checkov:skip=CKV_AWS_20:Bucket should be public read to enable redirect to www. domain
+  #checkov:skip=CKV2_AWS_6:Public access can't be blocked to enable redirect
 
   bucket = var.domain_name
 }
