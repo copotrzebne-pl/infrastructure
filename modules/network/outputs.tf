@@ -1,5 +1,5 @@
 output "azs" {
-  description = "A list of used avalibility zones."
+  description = "A list of used availability zones."
   value       = module.vpc.azs
 }
 
