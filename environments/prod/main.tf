@@ -45,6 +45,7 @@ module "remote-state-s3-backend" {
 
 module "network" {
   source = "../../modules/network"
+  name   = "${var.stack_name}-network"
 }
 
 module "redirect" {

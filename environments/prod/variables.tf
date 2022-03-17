@@ -22,3 +22,8 @@ variable "environment" {
   description = "Deployment environment name"
   type        = string
 }
+
+variable "stack_name" {
+  description = "Identifier for stack resources"
+  type        = string
+}
