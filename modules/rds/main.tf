@@ -13,8 +13,8 @@ resource "aws_db_instance" "default" {
   password                            = var.db_credentials.password
   skip_final_snapshot                 = true
   db_subnet_group_name                = var.subnet_group_name
-  enabled_cloudwatch_logs_exports     = ["general", "error", "slowquery"]
-  storage_encrypted                   = true
+  enabled_cloudwatch_logs_exports     = ["postgresql"]
+  storage_encrypted                   = false
   auto_minor_version_upgrade          = true
   iam_database_authentication_enabled = true
 }
