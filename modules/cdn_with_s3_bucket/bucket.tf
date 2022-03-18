@@ -25,11 +25,16 @@ data "aws_iam_policy_document" "s3_origin" {
 }
 
 resource "aws_s3_bucket" "default" {
-  #checkov:skip=CKV_AWS_21:Versioning is disabled to save money
-  #checkov:skip=CKV_AWS_144:Cross-region replication is disabled to save money
   #checkov:skip=CKV_AWS_18:Access logging is disabled to save money
   #checkov:skip=CKV_AWS_19:Data are encrypted - outdated rule
+  #checkov:skip=CKV_AWS_21:Versioning is disabled to save money
+  #checkov:skip=CKV_AWS_144:Cross-region replication is disabled to save money
   #checkov:skip=CKV_AWS_145:Data are encrypted - outdated rule
+  #checkov:skip=CKV2_AWS_37:Versioning is disabled to save money
+  #checkov:skip=CKV2_AWS_38:Website (redirect) require that
+  #checkov:skip=CKV2_AWS_39:Website (redirect) require that
+  #checkov:skip=CKV2_AWS_40:Data are encrypted
+  #checkov:skip=CKV2_AWS_41:Access logging is disabled to save money
 
   bucket = var.s3_bucket_name
 }

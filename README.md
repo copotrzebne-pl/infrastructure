@@ -79,6 +79,10 @@ terraform plan
 terraform apply
 ```
 
+## Deployment
+
+Changes are deployed to AWS after push to branch `main` (when pull request is merged).
+
 ## Licence
 
 [GNU General Public License v3.0](LICENSE)
