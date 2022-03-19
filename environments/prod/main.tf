@@ -64,3 +64,31 @@ module "rds" {
   database_name     = "copotrzebne"
   db_credentials    = local.db_credentials
 }
+
+module "container_repository" {
+  source = "../../modules/container_repository"
+
+  name = "${var.stack_name}-container-repository"
+}
+
+module "container_orchestrator" {
+  source = "../../modules/ecs"
+
+  name          = "${var.stack_name}-ecs"
+  instance_type = "t2.micro"
+
+  scaling = {
+    min_size         = 0
+    max_size         = 1
+    desired_capacity = 1
+  }
+
+  network = {
+    # checkov:skip=CKV_AWS_88: "EC2 instance should not have public IP."
+    # For cost saving purpose we place instances in public subnet and assign public IP.
+    # Disabling public ips would require NAT or PrivateLink to communicate with ECS
+    assign_instance_public_ips = true
+    subnets                    = module.network.public_subnets
+    security_groups            = [module.network.default_security_group]
+  }
+}
