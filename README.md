@@ -47,10 +47,7 @@ Instructions of setting up your project locally. Follow these simple steps.
 * Required software installed using commands:
 
   ```bash
-  brew bundle
-  tfenv install
-  tflint --init
-  pre-commit install
+  make configure
   ```
 
 ### Usage
@@ -67,16 +64,39 @@ tfenv use
 # Go to stack which you want to deploy
 cd environments/prod
 
-# Verify files
+# Initialize a working directory and install dependencies (terraform modules)
+terraform init
+
+# Verify files (run linters)
 pre-commit run --all-files
 
-# Verify changes
-terraform init
+# Verify changes which will be applied on AWS
 terraform plan
 
-# Deploy changes
-# Do it only when you are sure of what you are doing!
+# Deploy changes: Do it only when you are sure of what you are doing!
 terraform apply
+```
+
+To simplify work you can use command defined in `Makefile`:
+
+```bash
+# Define which AWS credentials should be used
+export AWS_PROFILE=copotrzebne-prod
+
+# To initiate project and install terraform modules
+make init
+
+# To validate project
+make check
+
+# To verify what changed will be deployed
+make plan
+
+# To deploy changes
+make apply
+
+# You can run multiple commands at once
+make check plan
 ```
 
 ## Deployment
