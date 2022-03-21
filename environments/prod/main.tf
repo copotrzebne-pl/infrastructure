@@ -84,11 +84,8 @@ module "container_orchestrator" {
   }
 
   network = {
-    # checkov:skip=CKV_AWS_88: "EC2 instance should not have public IP."
-    # For cost saving purpose we place instances in public subnet and assign public IP.
-    # Disabling public ips would require NAT or PrivateLink to communicate with ECS
-    assign_instance_public_ips = true
-    subnets                    = module.network.public_subnets
+    assign_instance_public_ips = false
+    subnets                    = module.network.private_subnets
     security_groups            = [module.network.default_security_group]
   }
 }
