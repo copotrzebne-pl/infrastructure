@@ -22,6 +22,15 @@ module "cdn_certificate" {
   aws_region                = "us-east-1" # CF Certificate need to be created in US-EAST-1
 }
 
+module "cdn_certificate_regional" {
+  source = "../../modules/certificate"
+
+  domain_name               = var.base_domain
+  subject_alternative_names = ["*.${var.base_domain}"]
+  zone_id                   = module.hosting_zone.zone_id
+  aws_region                = var.aws_region
+}
+
 module "cdn_with_s3_bucket" {
   source = "../../modules/cdn_with_s3_bucket"
 
@@ -97,4 +106,20 @@ module "app_api" {
   cluster_id     = module.container_orchestrator.cluster_id
   vpc_id         = module.network.vpc_id
   container_port = 8000
+}
+
+module "load_balancer" {
+  source = "../../modules/load_balancer"
+  name   = "${var.stack_name}-default-alb"
+
+  network = {
+    vpc_id          = module.network.vpc_id
+    private_subnets = module.network.private_subnets
+    public_subnets  = module.network.public_subnets
+    security_groups = [module.network.default_security_group] #TODO: verify if we can allow less
+  }
+  default_target_group_arn = module.app_api.target_group_arn
+  certificate_arn          = module.cdn_certificate_regional.arn
+  zone_id                  = module.hosting_zone.zone_id
+  domain_name              = "api.${var.base_domain}"
 }
