@@ -70,8 +70,10 @@ module "rds" {
   source = "../../modules/rds"
 
   subnet_group_name = module.network.db_subnet_group_name
+  name              = var.stack_name
   database_name     = "copotrzebne"
   db_credentials    = local.db_credentials
+  vpc_id            = module.network.vpc_id
 }
 
 module "container_repository" {
