@@ -22,6 +22,7 @@ resource "aws_ecs_cluster_capacity_providers" "ec2_providers" {
 
   default_capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.ec2_provider.name
+    weight            = 100
   }
 }
 
