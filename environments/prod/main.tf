@@ -89,3 +89,12 @@ module "container_orchestrator" {
     security_groups            = [module.network.default_security_group]
   }
 }
+
+module "app_api" {
+  source = "../../modules/app_api"
+  name   = "${var.stack_name}-api"
+
+  cluster_id     = module.container_orchestrator.cluster_id
+  vpc_id         = module.network.vpc_id
+  container_port = 8000
+}
