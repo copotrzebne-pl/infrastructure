@@ -2,6 +2,10 @@ data "aws_ssm_parameter" "db_credentials" {
   name = "/prod/database/credentials"
 }
 
+data "terraform_remote_state" "api" {
+  backend = "api"
+}
+
 locals {
   cdn_domain_name = "www.${var.base_domain}"
   db_credentials  = jsondecode(data.aws_ssm_parameter.db_credentials.value)
@@ -101,15 +105,6 @@ module "container_orchestrator" {
   }
 }
 
-module "app_api" {
-  source = "../../modules/app_api"
-  name   = "${var.stack_name}-api"
-
-  cluster_id     = module.container_orchestrator.cluster_id
-  vpc_id         = module.network.vpc_id
-  container_port = 8000
-}
-
 module "load_balancer" {
   source = "../../modules/load_balancer"
   name   = "${var.stack_name}-default-alb"
@@ -120,7 +115,7 @@ module "load_balancer" {
     public_subnets  = module.network.public_subnets
     security_groups = [module.network.default_security_group] #TODO: verify if we can allow less
   }
-  default_target_group_arn = module.app_api.target_group_arn
+  default_target_group_arn = data.terraform_remote_state.api.target_group_arn
   certificate_arn          = module.cdn_certificate_regional.arn
   zone_id                  = module.hosting_zone.zone_id
   domain_name              = "api.${var.base_domain}"

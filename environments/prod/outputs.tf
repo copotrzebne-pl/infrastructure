@@ -58,3 +58,8 @@ output "network_private_subnets" {
   description = "List of IDs of private subnets."
   value       = module.network.private_subnets
 }
+
+output "ecs_cluster_id" {
+  description = "List of IDs of private subnets."
+  value       = module.container_orchestrator.cluster_id
+}
