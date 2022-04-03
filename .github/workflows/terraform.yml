@@ -39,6 +39,7 @@ jobs:
       - name: Setup Terraform Linter
         uses: terraform-linters/setup-tflint@v1
         with:
+          tflint_version: 0.35.0
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Terraform Linter plugins
