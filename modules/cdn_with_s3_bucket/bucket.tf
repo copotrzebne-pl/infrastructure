@@ -27,7 +27,9 @@ data "aws_iam_policy_document" "s3_origin" {
 resource "aws_s3_bucket" "default" {
   #checkov:skip=CKV_AWS_18:Access logging is disabled to save money
   #checkov:skip=CKV_AWS_19:Data are encrypted - outdated rule
+  #checkov:skip=CKV_AWS_20:ACL is set to private, the rule is broken
   #checkov:skip=CKV_AWS_21:Versioning is disabled to save money
+  #checkov:skip=CKV_AWS_57:ACL is set to private, the rule is broken
   #checkov:skip=CKV_AWS_144:Cross-region replication is disabled to save money
   #checkov:skip=CKV_AWS_145:Data are encrypted - outdated rule
   #checkov:skip=CKV2_AWS_37:Versioning is disabled to save money
