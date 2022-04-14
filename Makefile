@@ -6,11 +6,10 @@ check:
 configure:
 	brew bundle
 	tfenv install
-	tflint --init
 	pre-commit install
 
 init:
-	cd ./environments/prod && terraform init
+	cd ./environments/prod && terraform init && tflint --init
 
 plan:
 	cd ./environments/prod && terraform plan
