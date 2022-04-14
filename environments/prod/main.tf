@@ -52,11 +52,6 @@ module "remote-state-s3-backend" {
   replica_region = "us-west-1"
 }
 
-module "network" {
-  source = "../../modules/network"
-  name   = "${var.stack_name}-network"
-}
-
 module "redirect" {
   source = "../../modules/redirect"
 
@@ -64,64 +59,4 @@ module "redirect" {
   zone_id             = module.hosting_zone.zone_id
   domain_name         = var.base_domain
   target_url          = local.cdn_domain_name
-}
-
-module "rds" {
-  source = "../../modules/rds"
-
-  subnet_group_name = module.network.db_subnet_group_name
-  name              = var.stack_name
-  database_name     = "copotrzebne"
-  db_credentials    = local.db_credentials
-  vpc_id            = module.network.vpc_id
-}
-
-module "container_repository" {
-  source = "../../modules/container_repository"
-
-  name = "${var.stack_name}-container-repository"
-}
-
-module "container_orchestrator" {
-  source = "../../modules/ecs"
-
-  name          = "${var.stack_name}-ecs"
-  instance_type = "t2.micro"
-
-  scaling = {
-    min_size         = 0
-    max_size         = 1
-    desired_capacity = 1
-  }
-
-  network = {
-    assign_instance_public_ips = false
-    subnets                    = module.network.private_subnets
-    security_groups            = [module.network.default_security_group]
-  }
-}
-
-module "app_api" {
-  source = "../../modules/app_api"
-  name   = "${var.stack_name}-api"
-
-  cluster_id     = module.container_orchestrator.cluster_id
-  vpc_id         = module.network.vpc_id
-  container_port = 8000
-}
-
-module "load_balancer" {
-  source = "../../modules/load_balancer"
-  name   = "${var.stack_name}-default-alb"
-
-  network = {
-    vpc_id          = module.network.vpc_id
-    private_subnets = module.network.private_subnets
-    public_subnets  = module.network.public_subnets
-    security_groups = [module.network.default_security_group] #TODO: verify if we can allow less
-  }
-  default_target_group_arn = module.app_api.target_group_arn
-  certificate_arn          = module.cdn_certificate_regional.arn
-  zone_id                  = module.hosting_zone.zone_id
-  domain_name              = "api.${var.base_domain}"
 }
