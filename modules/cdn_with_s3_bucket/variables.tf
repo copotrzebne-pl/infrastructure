@@ -6,16 +6,6 @@ variable "aliases" {
   description = "List of domains and zone ids for CDN"
 }
 
-variable "api_domain_name" {
-  type        = string
-  description = "A domain name for API"
-
-  validation {
-    condition     = !can(regex("[A-Z]", var.api_domain_name))
-    error_message = "Domain name must be lower-case."
-  }
-}
-
 variable "comment" {
   type        = string
   description = "Comment for the CloudFront Distribution and Origin Access Identity"
@@ -70,4 +60,9 @@ variable "s3_bucket_name" {
 variable "s3_user_name" {
   type        = string
   description = "The name of the user which will upload files to S3 Bucket"
+}
+
+variable "api_domain_name" {
+  type        = string
+  description = "A domain name for API"
 }

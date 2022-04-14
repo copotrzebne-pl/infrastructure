@@ -18,7 +18,7 @@ module "acm-multiple-domains" {
   for_each = { for domain in aws_acm_certificate.default.domain_validation_options : domain.domain_name => domain }
 
   source  = "cebollia/acm-multiple-domains/aws"
-  version = "1.0.1"
+  version = "1.0.0"
 
   certificate_arn = aws_acm_certificate.default.arn
   domain          = each.key
