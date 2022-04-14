@@ -1,0 +1,32 @@
+@startuml
+
+component [eu-central-1] <<Region>> as c1
+component [eu-west-1] <<Region>> as e1
+
+component [PRO] <<Environment>> as pro
+
+component [CDN] <<Stack>> as cdn
+component [mails] <<Stack>> as mails
+component [hosting_zones] <<Stack>> as dns
+
+component [aws_acm_certificate] <<Module>> as cert
+component [aws_s3_bucket] <<Module>> as s3
+component [redirect] <<Module>> as redirect
+component [SES] <<Module>> as ses
+component [Workmail] <<Module>> as workmail
+component [hosting_zone_1] <<Module>> as zone1
+component [hosting_zone_2] <<Module>> as zone2
+
+pro --> c1
+c1 --> cdn
+cdn --> cert
+cdn --> s3
+cdn --> redirect
+c1 --> dns
+dns --> zone1
+dns --> zone2
+pro --> e1
+e1 --> mails
+mails --> ses
+mails --> workmail
+@enduml
