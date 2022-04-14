@@ -1,6 +1,8 @@
 resource "aws_route53_record" "default" {
-  zone_id = var.zone_id
-  name    = var.domain_name
+  for_each = { for i, v in var.aliases : i => v }
+
+  zone_id = each.value.zone_id
+  name    = each.value.domain
   type    = "A"
 
   alias {

@@ -1,10 +1,7 @@
-data "aws_ssm_parameter" "db_credentials" {
-  name = "/prod/database/credentials"
-}
-
 locals {
-  cdn_domain_name = "www.${var.base_domain}"
-  db_credentials  = jsondecode(data.aws_ssm_parameter.db_credentials.value)
+  cdn_domain_name    = "www.${var.base_domain}"
+  cdn_domain_name_en = "www.${var.base_domain_en}"
+  cdn_domain_name_ua = "www.${var.base_domain_ua}"
 }
 
 module "hosting_zone" {
@@ -13,13 +10,31 @@ module "hosting_zone" {
   name = var.base_domain
 }
 
+module "hosting_zone_en" {
+  source = "../../modules/hosting_zone"
+
+  name = var.base_domain_en
+}
+
+module "hosting_zone_ua" {
+  source = "../../modules/hosting_zone"
+
+  name = var.base_domain_ua
+}
+
 module "cdn_certificate" {
   source = "../../modules/certificate"
 
-  domain_name               = var.base_domain
-  subject_alternative_names = ["*.${var.base_domain}"]
-  zone_id                   = module.hosting_zone.zone_id
-  aws_region                = "us-east-1" # CF Certificate need to be created in US-EAST-1
+  domain_name = var.base_domain
+  subject_alternative_names = [
+    "*.${var.base_domain}",
+    "*.${var.base_domain_en}",
+    "*.${var.base_domain_ua}",
+    var.base_domain_en,
+    var.base_domain_ua
+  ]
+  zone_id    = module.hosting_zone.zone_id
+  aws_region = "us-east-1" # CF Certificate need to be created in US-EAST-1
 }
 
 module "cdn_certificate_regional" {
@@ -35,11 +50,21 @@ module "cdn_with_s3_bucket" {
   source = "../../modules/cdn_with_s3_bucket"
 
   acm_certificate_arn = module.cdn_certificate.arn
-  zone_id             = module.hosting_zone.zone_id
   s3_user_name        = "ci-s3-website-deployer"
 
-  comment         = local.cdn_domain_name
-  domain_name     = local.cdn_domain_name
+  comment = local.cdn_domain_name
+  aliases = [
+    {
+      domain  = local.cdn_domain_name,
+      zone_id = module.hosting_zone.zone_id
+      }, {
+      domain  = local.cdn_domain_name_ua,
+      zone_id = module.hosting_zone_ua.zone_id
+      }, {
+      domain  = local.cdn_domain_name_en,
+      zone_id = module.hosting_zone_en.zone_id
+    }
+  ]
   s3_bucket_name  = local.cdn_domain_name
   api_domain_name = var.api_domain_name
 }

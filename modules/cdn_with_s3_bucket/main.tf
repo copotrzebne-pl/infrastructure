@@ -1,5 +1,5 @@
 locals {
-  origin_id = "s3-bucket-${var.domain_name}"
+  origin_id = "s3-bucket-${var.s3_bucket_name}"
 }
 
 resource "aws_cloudfront_origin_access_identity" "default" {
@@ -17,7 +17,7 @@ resource "aws_cloudfront_distribution" "default" {
   default_root_object = "index.html"
   price_class         = "PriceClass_100"
 
-  aliases = [var.domain_name]
+  aliases = var.aliases[*].domain
 
   custom_error_response {
     error_caching_min_ttl = 60
@@ -94,7 +94,7 @@ resource "aws_cloudfront_distribution" "default" {
     max_ttl                = var.api_max_ttl
 
     forwarded_values {
-      headers = ["Authorization", "Origin", "Access-Control-Request-Headers", "Access-Control-Request-Method"]
+      headers = ["Authorization", "Origin", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Host"]
 
       query_string = true
 

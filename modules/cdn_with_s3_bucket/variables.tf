@@ -1,11 +1,9 @@
-variable "domain_name" {
-  type        = string
-  description = "A domain name for CDN"
-
-  validation {
-    condition     = !can(regex("[A-Z]", var.domain_name))
-    error_message = "Domain name must be lower-case."
-  }
+variable "aliases" {
+  type = list(object({
+    domain  = string
+    zone_id = string
+  }))
+  description = "List of domains and zone ids for CDN"
 }
 
 variable "api_domain_name" {
@@ -62,11 +60,6 @@ variable "api_max_ttl" {
   type        = number
   default     = 31536000
   description = "Maximum amount of time (in seconds) that an object is in a CloudFront cache"
-}
-
-variable "zone_id" {
-  type        = string
-  description = "ID of the hosted zone where DNS records will be created"
 }
 
 variable "s3_bucket_name" {
