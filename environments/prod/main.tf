@@ -85,3 +85,21 @@ module "redirect" {
   domain_name         = var.base_domain
   target_url          = local.cdn_domain_name
 }
+
+module "redirect_en" {
+  source = "../../modules/redirect"
+
+  acm_certificate_arn = module.cdn_certificate.arn
+  zone_id             = module.hosting_zone_en.zone_id
+  domain_name         = var.base_domain_en
+  target_url          = local.cdn_domain_name_en
+}
+
+module "redirect_ua" {
+  source = "../../modules/redirect"
+
+  acm_certificate_arn = module.cdn_certificate.arn
+  zone_id             = module.hosting_zone_ua.zone_id
+  domain_name         = var.base_domain_ua
+  target_url          = local.cdn_domain_name_ua
+}
