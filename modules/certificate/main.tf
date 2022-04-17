@@ -14,23 +14,21 @@ resource "aws_acm_certificate" "default" {
   provider = aws
 }
 
-resource "aws_route53_record" "default" {
-  for_each = {
-    for dvo in aws_acm_certificate.default.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
-  zone_id         = var.zone_id
-  ttl             = 60
-  allow_overwrite = true
-  name            = each.value.name
-  type            = each.value.type
-  records         = [each.value.record]
+module "acm-multiple-domains" {
+  for_each = { for domain in aws_acm_certificate.default.domain_validation_options : domain.domain_name => domain }
+
+  source  = "cebollia/acm-multiple-domains/aws"
+  version = "1.0.1"
+
+  certificate_arn = aws_acm_certificate.default.arn
+  domain          = each.key
+  name            = each.value.resource_record_name
+  type            = each.value.resource_record_type
+  record          = each.value.resource_record_value
+  ttl             = 3600
 }
 
 resource "aws_acm_certificate_validation" "default" {
   certificate_arn         = aws_acm_certificate.default.arn
-  validation_record_fqdns = [for record in aws_route53_record.default : record.fqdn]
+  validation_record_fqdns = [for domain in module.acm-multiple-domains : domain.record.fqdn]
 }

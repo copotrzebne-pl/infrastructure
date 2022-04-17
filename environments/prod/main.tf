@@ -33,7 +33,6 @@ module "cdn_certificate" {
     var.base_domain_en,
     var.base_domain_ua
   ]
-  zone_id    = module.hosting_zone.zone_id
   aws_region = "us-east-1" # CF Certificate need to be created in US-EAST-1
 }
 
@@ -42,8 +41,8 @@ module "cdn_certificate_regional" {
 
   domain_name               = var.base_domain
   subject_alternative_names = ["*.${var.base_domain}"]
-  zone_id                   = module.hosting_zone.zone_id
-  aws_region                = var.aws_region
+
+  aws_region = var.aws_region
 }
 
 module "cdn_with_s3_bucket" {
