@@ -102,3 +102,27 @@ module "redirect_ua" {
   domain_name         = var.base_domain_ua
   target_url          = local.cdn_domain_name_ua
 }
+
+module "beta_domain" {
+  source = "../../modules/domain_delegation"
+
+  name         = "beta.${var.base_domain}"
+  zone_id      = module.hosting_zone.zone_id
+  name_servers = var.beta_name_servers
+}
+
+module "beta_domain_en" {
+  source = "../../modules/domain_delegation"
+
+  name         = "beta.${var.base_domain_en}"
+  zone_id      = module.hosting_zone_en.zone_id
+  name_servers = var.beta_name_servers_en
+}
+
+module "beta_domain_ua" {
+  source = "../../modules/domain_delegation"
+
+  name         = "beta.${var.base_domain_ua}"
+  zone_id      = module.hosting_zone_ua.zone_id
+  name_servers = var.beta_name_servers_ua
+}
