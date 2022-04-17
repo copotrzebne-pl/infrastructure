@@ -8,11 +8,6 @@ variable "domain_name" {
   }
 }
 
-variable "zone_id" {
-  type        = string
-  description = "The zone id of the Route53 Hosted Zone"
-}
-
 variable "subject_alternative_names" {
   type        = list(string)
   default     = []
