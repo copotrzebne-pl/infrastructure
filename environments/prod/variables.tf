@@ -37,3 +37,18 @@ variable "stack_name" {
   description = "Identifier for stack resources"
   type        = string
 }
+
+variable "beta_name_servers" {
+  description = "Name servers for beta domain"
+  type        = list(string)
+}
+
+variable "beta_name_servers_en" {
+  description = "Name servers for beta domain - EN"
+  type        = list(string)
+}
+
+variable "beta_name_servers_ua" {
+  description = "Name servers for beta domain - UA"
+  type        = list(string)
+}
