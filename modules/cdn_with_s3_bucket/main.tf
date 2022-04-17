@@ -94,7 +94,7 @@ resource "aws_cloudfront_distribution" "default" {
     max_ttl                = var.api_max_ttl
 
     forwarded_values {
-      headers = ["Authorization", "Origin", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Host"]
+      headers = ["Authorization", "Origin", "Access-Control-Request-Headers", "Access-Control-Request-Method"]
 
       query_string = true
 
