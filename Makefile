@@ -12,9 +12,10 @@ configure:
 	brew bundle
 	tfenv install
 	pre-commit install
+	tflint --init
 
 init: check-args
-	cd ${stack_dir} && source ${var_file} && terraform init && tflint --init
+	cd ${stack_dir} && source ${var_file} && terraform init
 
 plan: check-args
 	cd ${stack_dir} && source ${var_file} && terraform plan
