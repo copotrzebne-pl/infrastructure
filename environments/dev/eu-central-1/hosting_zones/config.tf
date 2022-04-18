@@ -6,6 +6,7 @@ terraform {
     encrypt        = true
     kms_key_id     = "arn:aws:kms:eu-central-1:933930654998:key/2398f819-c84e-4b3c-bf44-20967880fbdf"
     dynamodb_table = "tf-remote-state-lock"
+    profile        = "copotrzebne-dev"
   }
 
   required_providers {
@@ -17,8 +18,8 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
-
+  region              = var.aws_region
+  profile             = "copotrzebne-dev"
   allowed_account_ids = [var.aws_account_id]
 
   default_tags {

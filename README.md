@@ -100,7 +100,7 @@ Instructions of setting up your project locally. Follow these simple steps.
 
 ### Prerequisites
 
-* AWS profile configured for CLI
+* Configured AWS profiles with names: `copotrzebne-dev`, `copotrzebne-pro`
 * Required software installed using commands:
 
   ```bash
@@ -112,9 +112,6 @@ Instructions of setting up your project locally. Follow these simple steps.
 Here is a list of commands which you will find useful when working with this repo.
 
 ```bash
-# Define which AWS credentials should be used
-export AWS_PROFILE=copotrzebne-prod
-
 # Load Terraform version based on .terraform-version file
 tfenv use
 
