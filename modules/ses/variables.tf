@@ -1,6 +1,6 @@
 variable "domain" {
   description = "Domain name'"
-  type        = number
+  type        = string
 }
 
 variable "mail_from_subdomain" {
