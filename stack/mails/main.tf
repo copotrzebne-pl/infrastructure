@@ -1,8 +1,44 @@
-module "ses" {
-  source = "../../modules/ses"
+data "aws_region" "current" {}
 
-  domain                   = var.domain
-  mail_from_subdomain      = var.mail_from_subdomain
-  workmail_organization_id = var.workmail_organization_id
-  workmail_zone            = var.workmail_zone
+data "aws_route53_zone" "domain" {
+  name         = var.domain
+  private_zone = false
+}
+
+provider "aws" {
+  alias  = "eu-west"
+  region = "eu-west-1"
+}
+
+module "ses-eu-west" {
+  source  = "umotif-public/ses-domain/aws"
+  version = "~> 2.0.2"
+
+  providers = {
+    aws = aws.eu-west
+  }
+
+  zone_id                           = data.aws_route53_zone.domain.zone_id
+  enable_verification               = true
+  additional_verification_tokens    = [module.ses-eu-west.ses_domain_identity_verification_token]
+  additional_mail_from_records      = ["10 feedback-smtp.eu-west-1.amazonses.com"]
+  additional_incoming_email_records = ["10 inbound-smtp.eu-west-1.amazonaws.com"]
+}
+
+module "ses-eu-central" {
+  source  = "umotif-public/ses-domain/aws"
+  version = "~> 2.0.2"
+
+  zone_id                    = data.aws_route53_zone.domain.zone_id
+  enable_verification        = true
+  enable_verification_record = false
+
+  enable_spf_record = false
+
+  enable_from_domain_record    = false
+  enable_incoming_email_record = false
+}
+
+resource "aws_ses_email_identity" "email" {
+  email = var.email
 }

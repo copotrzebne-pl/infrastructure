@@ -1,7 +1,6 @@
 env ?= dev
-region ?= eu-central-1
-stack_dir := ./environments/${env}/${region}/${stack}
-var_file := ../../config.sh
+stack_dir := ./environments/${env}/${stack}
+var_file := ../config.sh
 
 lint: check
 

@@ -8,25 +8,18 @@ Repository to gather terraform scripts for setting up infrastructure for CoPotrz
 .
 ├── environments
 │   ├── dev
-│   │   └── region-1
-│   │       ├── stack-1
-│   │       │   └── ...
-│   │       ├── stack-2
-│   │       │   └── ...
-│   │       └── config.sh
+│   │   ├── stack-1
+│   │   │   └── ...
+│   │   ├── stack-2
+│   │   │   └── ...
+│   │   └── config.sh
 │   └── pro
-│       ├── region-1
-│       │   ├── stack-1
-│       │   │   └── ...
-│       │   ├── stack-2
-│       │   │   └── ...
-│       │   └── config.sh
-│       └── region-2
-│           ├── stack-1
-│           │   └── ...
-│           ├── stack-2
-│           │   └── ...
-│           └── config.sh
+│       ├── stack-1
+│       │   └── ...
+│       ├── stack-2
+│       │   └── ...
+│       └── config.sh
+
 ├── modules
 │   ├── module-1
 │   │   └── ...
@@ -45,14 +38,9 @@ Example structure:
 
 ### `environments`
 
-Contains deployable modules grouped per region (i.e. `eu-central-1`, `eu-west-1`),
-environments (i.e. `dev`, `pro`) and stacks (i.e. `cdn`, `hosting_zones`).
+Contains deployable modules grouped per environments (i.e. `dev`, `pro`) and stacks (i.e. `cdn`, `hosting_zones`).
 
-#### `regions`
-
-Each environment could contains components in multiple regions.
-
-Each environment contain file `config.sh` with global configuration per region (in given environment)
+Each environment contain file `config.sh` with global configuration (for environment)
 which could be stored in the repo (should not contain any credentials!).
 
 Why config is not kept in `tfvar` file? To prevent warnings from Terraform about undefined variables
@@ -119,10 +107,10 @@ export AWS_PROFILE=copotrzebne-dev
 tfenv use
 
 # Go to stack which you want to deploy
-cd environments/eu-central-1/dev/cdn/
+cd environments/dev/cdn/
 
 # Initialize a working directory and install dependencies (terraform modules)
-source ../../config.sh && terraform init
+source ../config.sh && terraform init
 
 # Verify files (run linters)
 pre-commit run --all-files
@@ -148,32 +136,31 @@ To simplify work you can use command defined in `Makefile`:
 export AWS_PROFILE=copotrzebne-prod
 
 # To initiate project and install terraform modules
-make init env=<env> stack=<stack> [region=<region>]
+make init env=<env> stack=<stack>
 
 # To validate project
 make check
 
 # To verify what changed will be deployed
-make plan env=<env> stack=<stack> [region=<region>]
+make plan env=<env> stack=<stack>
 
 # To deploy changes
-make apply env=<env> stack=<stack> [region=<region>]
+make apply env=<env> stack=<stack>
 
 # You can run multiple commands at once
-make check plan env=<env> stack=<stack> [region=<region>
+make check plan env=<env> stack=<stack>
 
 # Display outputs
-make output env=<env> stack=<stack> [region=<region>]
+make output env=<env> stack=<stack>
 
 # Display secret output
-make output-raw name=<name> env=<env> stack=<stack> [region=<region>]
+make output-raw name=<name> env=<env> stack=<stack>
 ```
 
 where
 
 * `<stack>` - name of supported stacks, i.e. `cdn`, required
 * `<env>` - AWS account: `dev` or `pro`, default: `dev`
-* `<region>` - AWS region: `eu-central-1` or `eu-west-1`, default: `eu-central-1`
 
 ## Deployment
 
