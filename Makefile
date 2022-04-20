@@ -15,16 +15,16 @@ configure:
 	tflint --init
 
 init: check-args
-	cd ${stack_dir} && source ${var_file} && terraform init
+	cd ${stack_dir} && source ${var_file} && AWS_PROFILE=copotrzebne-${env} terraform init
 
 plan: check-args
-	cd ${stack_dir} && source ${var_file} && terraform plan
+	cd ${stack_dir} && source ${var_file} && AWS_PROFILE=copotrzebne-${env} terraform plan
 
 apply: check-args
-	cd ${stack_dir} && source ${var_file} && terraform apply
+	cd ${stack_dir} && source ${var_file} && AWS_PROFILE=copotrzebne-${env} terraform apply
 
 output: check-args
-	cd ${stack_dir} && source ${var_file} && terraform output
+	cd ${stack_dir} && source ${var_file} && AWS_PROFILE=copotrzebne-${env} terraform output
 
 output-raw: check-args
   ifndef name

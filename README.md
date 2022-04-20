@@ -112,6 +112,9 @@ Instructions of setting up your project locally. Follow these simple steps.
 Here is a list of commands which you will find useful when working with this repo.
 
 ```bash
+# Set AWS Profile
+export AWS_PROFILE=copotrzebne-dev
+
 # Load Terraform version based on .terraform-version file
 tfenv use
 
