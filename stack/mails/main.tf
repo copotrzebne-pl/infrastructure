@@ -42,3 +42,19 @@ module "ses-eu-central" {
 resource "aws_ses_email_identity" "email" {
   email = var.email
 }
+
+resource "aws_route53_record" "autodiscover" {
+  zone_id = data.aws_route53_zone.domain.zone_id
+  name    = "autodiscover.${var.domain}"
+  type    = "CNAME"
+  ttl     = 86400
+  records = ["autodiscover.mail.eu-west-1.awsapps.com."]
+}
+
+resource "aws_route53_record" "dmarc" {
+  zone_id = data.aws_route53_zone.domain.zone_id
+  name    = "_dmarc.${var.domain}"
+  type    = "TXT"
+  ttl     = 86400
+  records = ["v=DMARC1;p=quarantine;pct=100;fo=1"]
+}
