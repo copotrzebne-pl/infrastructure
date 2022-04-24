@@ -38,7 +38,7 @@ Example structure:
 
 ### `environments`
 
-Contains deployable modules grouped per environments (i.e. `dev`, `pro`) and stacks (i.e. `cdn`, `hosting_zones`).
+Contains deployable modules grouped per environments (i.e. `dev`, `pro`) and stacks (i.e. `cdn`, `hosted_zones`).
 
 Each environment contain file `config.sh` with global configuration (for environment)
 which could be stored in the repo (should not contain any credentials!).

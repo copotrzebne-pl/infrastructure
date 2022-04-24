@@ -4,7 +4,7 @@ component [PRO] <<Environment>> as pro
 
 component [CDN] <<Stack>> as cdn
 component [mails] <<Stack>> as mails
-component [hosting_zones] <<Stack>> as dns
+component [hosted_zones] <<Stack>> as dns
 
 component [aws_acm_certificate] <<Module>> as cert
 component [aws_s3_bucket] <<Module>> as s3

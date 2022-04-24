@@ -1,1 +1,1 @@
-api_domain_name = "api.dev.beta.copotrzebne.pl"
+api_domain_name = "api.dev.copotrzebne.pl"

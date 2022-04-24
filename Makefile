@@ -29,7 +29,10 @@ output-raw: check-args
   ifndef name
 	  $(error name is undefined)
   endif
-	cd ${stack_dir} && source ${var_file} && terraform output -raw ${name}
+	cd ${stack_dir} && source ${var_file} && AWS_PROFILE=copotrzebne-${env} terraform output -raw ${name}
+
+destroy: check-args
+	cd ${stack_dir} && source ${var_file} && AWS_PROFILE=copotrzebne-${env} terraform apply -destroy
 
 check-args:
 ifndef stack

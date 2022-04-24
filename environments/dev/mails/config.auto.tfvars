@@ -1,1 +1,1 @@
-email = "hello@dev.beta.copotrzebne.pl"
+email = "hello@dev.copotrzebne.pl"
