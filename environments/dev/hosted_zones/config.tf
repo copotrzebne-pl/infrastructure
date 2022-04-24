@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    bucket         = "terraform-remote-state-432456784825-eu-central-1"
-    key            = "pro/hosting_zones/terraform.tfstate"
+    bucket         = "terraform-remote-state-933930654998-eu-central-1"
+    key            = "dev/hosted_zones/terraform.tfstate"
     region         = "eu-central-1"
     encrypt        = true
-    kms_key_id     = "arn:aws:kms:eu-central-1:432456784825:key/a0714922-c1d8-4d01-b4fc-0ae98fa3a7e3"
+    kms_key_id     = "arn:aws:kms:eu-central-1:933930654998:key/2398f819-c84e-4b3c-bf44-20967880fbdf"
     dynamodb_table = "tf-remote-state-lock"
   }
 

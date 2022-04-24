@@ -1,16 +1,12 @@
 data "aws_region" "current" {}
 
-locals {
-  bucket_name = aws_s3_bucket.default.bucket
-}
-
 resource "aws_cloudfront_distribution" "default" {
   #checkov:skip=CKV_AWS_68:TODO: WAF
   #checkov:skip=CKV2_AWS_32:TODO: security headers policy
   #checkov:skip=CKV_AWS_86:Access logging is disabled to save money
 
   price_class     = "PriceClass_100"
-  comment         = local.bucket_name
+  comment         = aws_s3_bucket.default.bucket
   enabled         = true
   is_ipv6_enabled = false
 
@@ -18,7 +14,7 @@ resource "aws_cloudfront_distribution" "default" {
 
   origin {
     domain_name = "${aws_s3_bucket.default.bucket}.s3-website.${data.aws_region.current.name}.amazonaws.com"
-    origin_id   = local.bucket_name
+    origin_id   = aws_s3_bucket.default.bucket
 
     custom_origin_config {
       http_port              = 80
@@ -37,7 +33,7 @@ resource "aws_cloudfront_distribution" "default" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.bucket_name
+    target_origin_id = aws_s3_bucket.default.bucket
     compress         = true
 
     min_ttl     = 31536000

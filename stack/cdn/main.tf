@@ -10,6 +10,8 @@ data "aws_route53_zone" "ua" {
   name = "${var.base_domain_ua}."
 }
 
+data "aws_caller_identity" "default" {}
+
 module "cdn_certificate" {
   source = "../../modules/certificate"
 
@@ -29,7 +31,7 @@ module "cdn_with_s3_bucket" {
 
   acm_certificate_arn = module.cdn_certificate.arn
   s3_user_name        = "ci-s3-website-deployer"
-  s3_bucket_name      = var.base_domain
+  s3_bucket_name      = "cdn-${data.aws_caller_identity.default.account_id}-${var.base_domain}"
   api_domain_name     = var.api_domain_name
   comment             = var.base_domain
   aliases = [
