@@ -33,6 +33,7 @@ module "cdn_with_s3_bucket" {
   s3_user_name        = "ci-s3-website-deployer"
   s3_bucket_name      = "cdn-${data.aws_caller_identity.default.account_id}-${var.base_domain}"
   api_domain_name     = var.api_domain_name
+  front_domain_name   = var.front_domain_name
   comment             = var.base_domain
   aliases = [
     {
