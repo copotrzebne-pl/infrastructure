@@ -1,5 +1,5 @@
 locals {
-  origin_id = "s3-bucket-${var.s3_bucket_name}"
+  origin_id = "front"
 }
 
 resource "aws_cloudfront_origin_access_identity" "default" {
@@ -11,27 +11,24 @@ resource "aws_cloudfront_distribution" "default" {
   #checkov:skip=CKV2_AWS_32:TODO: security headers policy
   #checkov:skip=CKV_AWS_86:Access logging is disabled to save money
 
-  enabled             = true
-  is_ipv6_enabled     = true
-  comment             = var.comment
-  default_root_object = "index.html"
-  price_class         = "PriceClass_100"
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = var.comment
+  price_class     = "PriceClass_100"
 
   aliases = var.aliases[*].domain
 
-  custom_error_response {
-    error_caching_min_ttl = 60
-    error_code            = 404
-    response_code         = 200
-    response_page_path    = "/index.html"
-  }
-
   origin {
-    domain_name = aws_s3_bucket.default.bucket_regional_domain_name
+    domain_name = var.front_domain_name
     origin_id   = local.origin_id
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
+    custom_origin_config {
+      http_port                = 80
+      https_port               = 443
+      origin_protocol_policy   = "https-only"
+      origin_ssl_protocols     = ["TLSv1.2"]
+      origin_keepalive_timeout = 60
+      origin_read_timeout      = 60
     }
   }
 
@@ -62,7 +59,7 @@ resource "aws_cloudfront_distribution" "default" {
     compress         = true
 
     forwarded_values {
-      headers = []
+      headers = ["Host"]
 
       query_string = false
 

@@ -18,13 +18,13 @@ variable "acm_certificate_arn" {
 
 variable "static_default_ttl" {
   type        = number
-  default     = 60
+  default     = 300
   description = "Default amount of time (in seconds) that an object is in a CloudFront cache"
 }
 
 variable "static_min_ttl" {
   type        = number
-  default     = 0
+  default     = 60
   description = "Minimum amount of time that you want objects to stay in CloudFront caches"
 }
 
@@ -65,4 +65,9 @@ variable "s3_user_name" {
 variable "api_domain_name" {
   type        = string
   description = "A domain name for API"
+}
+
+variable "front_domain_name" {
+  type        = string
+  description = "A domain name for Front"
 }

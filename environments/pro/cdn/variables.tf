@@ -32,3 +32,8 @@ variable "api_domain_name" {
   type        = string
   description = "A domain name for API"
 }
+
+variable "front_domain_name" {
+  type        = string
+  description = "A domain name for Front"
+}
