@@ -26,12 +26,10 @@ module "cdn_certificate" {
   aws_region = "us-east-1" # CF Certificate need to be created in US-EAST-1
 }
 
-module "cdn_with_s3_bucket" {
-  source = "../../modules/cdn_with_s3_bucket"
+module "cdn" {
+  source = "../../modules/cdn"
 
   acm_certificate_arn = module.cdn_certificate.arn
-  s3_user_name        = "ci-s3-website-deployer"
-  s3_bucket_name      = "cdn-${data.aws_caller_identity.default.account_id}-${var.base_domain}"
   api_domain_name     = var.api_domain_name
   front_domain_name   = var.front_domain_name
   comment             = var.base_domain

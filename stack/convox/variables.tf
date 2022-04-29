@@ -18,7 +18,7 @@ variable "base_domain_ua" {
   type        = string
 }
 
-variable "rack_name" {
+variable "convox_domain" {
+  description = "Domain used by Convox ELB"
   type        = string
-  description = "Rack name"
 }

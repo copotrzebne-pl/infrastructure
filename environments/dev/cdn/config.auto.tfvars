@@ -1,2 +1,2 @@
-api_domain_name   = "api.dev.copotrzebne.pl"
-front_domain_name = "front.dev.copotrzebne.pl"
+api_domain_name   = "dev-api.copotrzebne.pl"
+front_domain_name = "dev-front.copotrzebne.pl"

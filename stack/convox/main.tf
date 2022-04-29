@@ -15,20 +15,20 @@ module "cdn_certificate" {
 module "convox_wildcard_domain" {
   source = "../../modules/convox_wildcard_domain"
 
-  domain    = var.base_domain
-  rack_name = var.rack_name
+  domain        = var.base_domain
+  convox_domain = var.convox_domain
 }
 
 module "convox_wildcard_domain_en" {
   source = "../../modules/convox_wildcard_domain"
 
-  domain    = var.base_domain_en
-  rack_name = var.rack_name
+  domain        = var.base_domain_en
+  convox_domain = var.convox_domain
 }
 
 module "convox_wildcard_domain_ua" {
   source = "../../modules/convox_wildcard_domain"
 
-  domain    = var.base_domain_ua
-  rack_name = var.rack_name
+  domain        = var.base_domain_ua
+  convox_domain = var.convox_domain
 }
