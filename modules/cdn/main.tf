@@ -2,10 +2,6 @@ locals {
   origin_id = "front"
 }
 
-resource "aws_cloudfront_origin_access_identity" "default" {
-  comment = var.comment
-}
-
 resource "aws_cloudfront_distribution" "default" {
   #checkov:skip=CKV_AWS_68:TODO: WAF
   #checkov:skip=CKV2_AWS_32:TODO: security headers policy

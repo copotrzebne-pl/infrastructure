@@ -7,7 +7,6 @@ component [mails] <<Stack>> as mails
 component [hosted_zones] <<Stack>> as dns
 
 component [aws_acm_certificate] <<Module>> as cert
-component [aws_s3_bucket] <<Module>> as s3
 component [redirect] <<Module>> as redirect
 component [SES 1] <<Module>> as ses1
 component [SES 2] <<Module>> as ses2
@@ -17,7 +16,6 @@ component [hosting_zone_2] <<Module>> as zone2
 
 pro --> cdn
 cdn --> cert
-cdn --> s3
 cdn --> redirect
 pro --> dns
 dns --> zone1

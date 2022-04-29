@@ -52,16 +52,6 @@ variable "api_max_ttl" {
   description = "Maximum amount of time (in seconds) that an object is in a CloudFront cache"
 }
 
-variable "s3_bucket_name" {
-  type        = string
-  description = "The name of S3 bucket"
-}
-
-variable "s3_user_name" {
-  type        = string
-  description = "The name of the user which will upload files to S3 Bucket"
-}
-
 variable "api_domain_name" {
   type        = string
   description = "A domain name for API"
